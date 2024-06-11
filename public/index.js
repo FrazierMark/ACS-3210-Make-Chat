@@ -6,6 +6,7 @@ $(document).ready(() => {
 
 	//Call to server to get online users
 	socket.emit('get online users');
+  socket.emit('get all channels');
   //Each user should be in the general channel by default
   socket.emit('user changed channel', "General");
 
@@ -58,13 +59,22 @@ $(document).ready(() => {
 		$('.channels').append(`<div class="channel">${newChannel}</div>`);
 	});
 
-	// Recieve the online users object and display it
+	// Receive the online users object and display it
 	socket.on('get online users', (onlineUsers) => {
 		//Our usernames are keys in the object of onlineUsers.
 		for (username in onlineUsers) {
 			$('.users-online').append(`<div class="user-online">${username}</div>`);
 		}
 	});
+
+  //Receive all channels from server on connection
+  socket.on('get all channels', (channels) => {
+    for(channel in channels) {
+      if(channel != "General") {
+        $('.channels').append(`<div class="channel">${channel}</div>`);
+      }
+    }
+  });
 
 	// Make the channel joined the current channel. Then load the messages.
 	// This only fires for the client who made the channel.

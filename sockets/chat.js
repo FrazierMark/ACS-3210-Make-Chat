@@ -1,7 +1,7 @@
 //chat.js
 module.exports = (io, socket, onlineUsers, channels) => {
 
-  
+
 	//Listen for a new user joining the chat and save in onlineUsers
 	socket.on('new user', (username) => {
 		//Save the username as key to access the user's socket id
@@ -24,6 +24,11 @@ module.exports = (io, socket, onlineUsers, channels) => {
 		//Send over the onlineUsers
 		socket.emit('get online users', onlineUsers);
 	});
+
+  socket.on('get all channels', () => {
+    //Send over the onlineUsers
+    socket.emit('get all channels', channels);
+  });
 
 	// Recieve new channel from client and save then broadcast it to all clients
 	socket.on('new channel', (newChannel) => {
