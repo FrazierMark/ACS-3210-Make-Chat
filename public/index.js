@@ -34,6 +34,17 @@ $(document).ready(() => {
 		}
 	});
 
+  // Btn handler and emit new channel input to server
+  $('#new-channel-btn').click( () => {
+    let newChannel = $('#new-channel-input').val();
+    if(newChannel.length > 0){
+      // Emit the new channel to the server
+      socket.emit('new channel', newChannel);
+      $('#new-channel-input').val("");
+    }
+  });
+  
+
 	// Recieve the online users object and display it
 	socket.on('get online users', (onlineUsers) => {
 		//Our usernames are keys in the object of onlineUsers.
