@@ -4,6 +4,9 @@ $(document).ready(() => {
 
 	let currentUser;
 
+	//Call to server to get online users
+	socket.emit('get online users');
+
 	$('#create-user-btn').click((e) => {
 		e.preventDefault();
 		if ($('#username-input').val().length > 0) {
@@ -31,6 +34,14 @@ $(document).ready(() => {
 		}
 	});
 
+	// Recieve the online users object and display it
+	socket.on('get online users', (onlineUsers) => {
+		//Our usernames are keys in the object of onlineUsers.
+		for (username in onlineUsers) {
+			$('.users-online').append(`<div class="user-online">${username}</div>`);
+		}
+	});
+
 	//Recieve and Output the new message from server
 	socket.on('new message', (data) => {
 		$('.message-container').append(`
@@ -41,10 +52,18 @@ $(document).ready(() => {
   `);
 	});
 
-	//socket listeners
+	//Output the new user when they join
 	socket.on('new user', (username) => {
 		console.log(`${username} has joined the chat`);
 		// Add the new user to the online users div
 		$('.users-online').append(`<div class="user-online">${username}</div>`);
+	});
+
+	//Refresh the online user list
+	socket.on('user has left', (onlineUsers) => {
+		$('.users-online').empty();
+		for (username in onlineUsers) {
+			$('.users-online').append(`<p>${username}</p>`);
+		}
 	});
 });

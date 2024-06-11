@@ -7,12 +7,13 @@ const { engine } = require('express-handlebars');
 //Socket.io
 const io = require('socket.io')(server);
 
+let onlineUsers = {};
+
 io.on('connection', (socket) => {
   // Listener that fires whenever a new user connects
 	console.log('🔌 New user connected! 🔌');
 
-	
-	require('./sockets/chat.js')(io, socket);
+	require('./sockets/chat.js')(io, socket, onlineUsers);
 });
 
 //Handlebars
