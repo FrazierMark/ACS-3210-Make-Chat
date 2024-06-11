@@ -18,21 +18,22 @@ $(document).ready(() => {
 		}
 	});
 
-	// Emit message to Server
-	$('#send-chat-btn').click((e) => {
-		e.preventDefault();
-		// Get the message text value
-		let message = $('#chat-input').val();
-		// Make sure it's not empty
-		if (message.length > 0) {
-			// Emit the message with the current user to the server
-			socket.emit('new message', {
-				sender: currentUser,
-				message: message,
-			});
-			$('#chat-input').val('');
-		}
-	});
+	// Emit message to Server and the Correct channel
+	$$('#send-chat-btn').click((e) => {
+    e.preventDefault();
+    // Get the client's channel
+    let channel = $('.channel-current').text();
+    let message = $('#chat-input').val();
+    if(message.length > 0) {
+      socket.emit('new message', {
+        sender : currentUser,
+        message : message,
+        //Send the channel over to the server
+        channel : channel
+      });
+      $('#chat-input').val("");
+    }
+  });
 
 	// Btn handler and emit new channel input to server
 	$('#new-channel-btn').click(() => {
@@ -75,15 +76,20 @@ $(document).ready(() => {
 		});
 	});
 
-	//Recieve and Output the new message from server
+	//Recieve and Output the new message from server (depending on the channel)
 	socket.on('new message', (data) => {
-		$('.message-container').append(`
-    <div class="message">
-      <p class="message-user">${data.sender}: </p>
-      <p class="message-text">${data.message}</p>
-    </div>
-  `);
-	});
+    //Only append the message if the user is currently in that channel
+    let currentChannel = $('.channel-current').text();
+    if(currentChannel == data.channel) {
+      $('.message-container').append(`
+        <div class="message">
+          <p class="message-user">${data.sender}: </p>
+          <p class="message-text">${data.message}</p>
+        </div>
+      `);
+    }
+  });
+  
 
 	//Output the new user when they join
 	socket.on('new user', (username) => {
