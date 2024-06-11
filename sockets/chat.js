@@ -1,5 +1,7 @@
 //chat.js
 module.exports = (io, socket, onlineUsers, channels) => {
+
+  
 	//Listen for a new user joining the chat and save in onlineUsers
 	socket.on('new user', (username) => {
 		//Save the username as key to access the user's socket id

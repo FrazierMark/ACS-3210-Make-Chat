@@ -27,7 +27,7 @@ $(document).ready(() => {
 	});
 
 	// Emit message to Server and the Correct channel
-	$$('#send-chat-btn').click((e) => {
+	$('#send-chat-btn').click((e) => {
     e.preventDefault();
     // Get the client's channel
     let channel = $('.channel-current').text();
